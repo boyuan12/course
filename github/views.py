@@ -27,6 +27,7 @@ def github_callback(request):
     gh_email = r.json()["email"]
 
     user = authenticate(username=gh_username, password="github")
+    
     if user is not None:
         login(request, user)
     else:
