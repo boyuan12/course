@@ -1,0 +1,25 @@
+{% extends "webdev/base.html" %}
+
+{% block title %}
+    View Attempt
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h1>View attempt</h2>
+        <h2>Username: {{ attempt.user.username }}</h3>
+        <h2>Submitted on: {{ attempt.time }} UTC</h2>
+        {% for key, value in attempt.data.items %}
+            <div>
+                {% if value.1 != None and key != 'submission' %}
+                    {% if value.1 == 1 %}
+                        <h3 style="color: green;">:) {{ value.0 }}</h3>
+                    {% else %}
+                        <h3 style="color: red;">:( {{ value.0 }}</h3>
+                        <span>Log: {{ value.2 }}</span>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
