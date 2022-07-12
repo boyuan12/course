@@ -217,8 +217,13 @@ def view_attempt(request, attempt_id):
 
 @login_required(login_url='/github/authorize/')
 def gradebook(request):
-    pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
-    pset2 = Attempt.objects.filter(user=request.user, pset=2)[::-1][0]
+    pset1 = None
+    pset2 = None
+
+    if len(list(Attempt.objects.filter(user=request.user, pset=1))) != 0:
+        pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
+    if len(list(Attempt.objects.filter(user=request.user, pset=2))) != 0:
+        pset2 = Attempt.objects.filter(user=request.user, pset=2)[::-1][0]
 
     return render(request, "webdev/gradebook.html", {
         "pset1": pset1,
