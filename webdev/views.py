@@ -9,6 +9,8 @@ try:
 except ImportError:
     from bs4 import BeautifulSoup
 
+import cssutils
+
 # Create your views here.
 @login_required(login_url='/github/authorize/')
 def index(request):
@@ -92,6 +94,120 @@ def pset1(request):
     else:
         return render(request, "webdev/pset1.html")
 
+@login_required(login_url='/github/authorize')
+def pset2(request):
+    if request.method == "POST":
+        url = request.POST["url"]
+        data = requests.get(url)
+
+        parsed_html = BeautifulSoup(data.text, features="html.parser")
+
+        if url[-1] == "/":
+            url += "style.css"
+        else:
+            url += "/style.css"
+        data = requests.get(url)
+        sheet = cssutils.parseString(data.content)
+
+        results = {}
+        testcases = {1: ["Styles must be written in style.css", 0], 2: ["Style.css must be linked properly to the HTML", 0], 3: ["Use at least 5 selectors", 0], 4: ["At least 2 class selectors", 0], 5: ["At least 2 ID selectors", 0], 6: ["At least 2 fonts", 0], 7: ["At least 2 colors", 0], 8: ["At least 1 border usage", 0], 9: ["At least 1 flexbox usage", 0], "all": 9}
+
+        color_count = 0
+        font_count = 0
+        border_count = 0
+        flex_count = 0
+        id_count = 0
+        class_count = 0
+
+        for rule in sheet:
+            if rule.type == rule.STYLE_RULE:
+                for prop in rule.style:
+                        results[rule.selectorText] = [prop.name, prop.value]
+                        if prop.name == "font-family":
+                            font_count += 1
+                        elif "color" in prop.name:
+                            color_count += 1
+                        elif "border" in prop.name:
+                            border_count += 1
+                        elif "display" in prop.name and "flex" in prop.value:
+                            flex_count += 1
+                        elif rule.selectorText[0] == "#":
+                            id_count += 1
+                        elif rule.selectorText[0] == ".":
+                            class_count += 1
+        
+        test_case_passed = 0
+        # Test case #1
+        if data.status_code == 200:
+            test_case_passed += 1
+            testcases[1][1] = 1
+        testcases[1].append(f'expected status code 200, got status code {data.status_code}')
+        
+        # Test case #2
+        link = parsed_html.find_all("link", attrs={"rel": "stylesheet", "href": "style.css"}) # 
+        if len(link) == 1:
+            test_case_passed += 1
+            testcases[2][1] = 1
+        testcases[2].append(f"expected style.css linked as stylesheet, found {len(link)}")
+
+        # Test case #3
+        selectors_count = len(results.keys())
+        if selectors_count >= 5:
+            test_case_passed += 1
+            testcases[3][1] = 1   
+        testcases[3].append(f"expected 5 selectors, found {selectors_count}")
+
+        # Test case #4
+        if class_count >= 2:
+            test_case_passed += 1
+            testcases[4][1] = 1   
+        testcases[4].append(f"expected 2 class selectors, found {class_count}")
+        
+        # Test case #5
+        if id_count >= 2:
+            test_case_passed += 1
+            testcases[5][1] = 1   
+        testcases[5].append(f"expected 2 id selectors, found {id_count}")
+        
+        # Test case #6
+        if font_count >= 2:
+            test_case_passed += 1
+            testcases[6][1] = 1   
+        testcases[6].append(f"expected 2 font properties, found {font_count}")
+        
+        # Test case #7
+        if color_count >= 2:
+            test_case_passed += 1
+            testcases[7][1] = 1   
+        testcases[7].append(f"expected 2 color properties, found {color_count}")
+        
+        # Test case #8
+        if border_count >= 1:
+            test_case_passed += 1
+            testcases[8][1] = 1   
+        testcases[8].append(f"expected 1 border property, found {font_count}")
+        
+        # Test case #9
+        if font_count >= 1:
+            test_case_passed += 1
+            testcases[9][1] = 1   
+        testcases[9].append(f"expected 1 flex display, found {font_count}")
+        
+        testcases["passed"] = test_case_passed
+        testcases["submission"] = url
+
+        a = Attempt.objects.create(user=request.user, data=testcases, pset=2)
+
+        print(results)
+        print(testcases)
+
+        return redirect(f"/attempt/{a.id}")
+
+
+        return HttpResponse("Hello")
+    else:
+        return render(request, "webdev/pset2.html")
+
 @login_required(login_url='/github/authorize/')
 def view_attempt(request, attempt_id):
     attempt = Attempt.objects.get(user=request.user, id=attempt_id)
@@ -101,7 +217,10 @@ def view_attempt(request, attempt_id):
 
 @login_required(login_url='/github/authorize/')
 def gradebook(request):
-    pset1 = Attempt.objects.filter(user=request.user)[::-1][0]
+    pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
+    pset2 = Attempt.objects.filter(user=request.user, pset=2)[::-1][0]
+
     return render(request, "webdev/gradebook.html", {
-        "pset1": pset1
+        "pset1": pset1,
+        "pset2": pset2,
     })

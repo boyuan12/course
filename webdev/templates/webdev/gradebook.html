@@ -18,6 +18,17 @@
             <div class="progress-bar bg-danger" role="progressbar" style="width: {{ pset1.data.passed|div:pset1.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset1.data.passed|div:pset1.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset1.data.passed|div:pset1.data.all|mul:100|floatformat }}%</div>
         </div>
         {% endif %}
+        <br>
+        <p>Problem Set #2: Styling the Website</p>
+        {% if pset2.data.passed|div:pset2.data.all >= 0.6 %}
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ pset2.data.passed|div:pset2.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset2.data.passed|div:pset2.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset2.data.passed|div:pset2.data.all|mul:100|floatformat }}%</div>
+        </div>
+        {% else %}
+        <div class="progress">
+            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ pset2.data.passed|div:pset2.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset2.data.passed|div:pset2.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset2.data.passed|div:pset2.data.all|mul:100|floatformat }}%</div>
+        </div>
+        {% endif %}
 
     </div>
 {% endblock %}
