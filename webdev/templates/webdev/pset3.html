@@ -1,0 +1,22 @@
+{% extends "webdev/base.html" %}
+
+{% block title %}
+    Day 3: JavaScript
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h1>Day 3: JavaScript</h1>
+        <h2>Pset 3: JS Challenge</h2>
+        <p>Problem Description: Given two int values, return their sum. Unless the two values are the same, then return double their sum.</p>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="file" class="form-label">File Upload</label>
+              <input type="file" class="form-control" id="file" name="file">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <small><a href="https://codingbat.com/prob/p141905">Original Problem</a></small>
+{% endblock %}

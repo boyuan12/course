@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 import requests
 from webdev.models import Attempt
+import js2py
 
 try: 
     from BeautifulSoup import BeautifulSoup
@@ -23,6 +24,10 @@ def day1(request):
 @login_required(login_url='/github/authorize')
 def day2(request):
     return render(request, "webdev/day2.html")
+
+@login_required(login_url='/github/authorize')
+def day3(request):
+    return render(request, "webdev/day3.html")
 
 @login_required(login_url='/github/authorize')
 def pset1(request):
@@ -206,11 +211,78 @@ def pset2(request):
         print(testcases)
 
         return redirect(f"/attempt/{a.id}")
-
-
-        return HttpResponse("Hello")
     else:
         return render(request, "webdev/pset2.html")
+
+@login_required(login_url='/github/authorize')
+def pset3(request):
+    if request.method == "POST":
+        results = {1: ["function sumDouble is defined", 0], 2: ["function sumDouble accept 2 arguments", 0], 3: ["sumDouble(1, 2) -> 3", 0], 4: ["sumDouble(3, 2) -> 5", 0], 5: ["sumDouble(2, 2) -> 8", 0], 6: ["sumDouble(-1, 0) -> -1", 0], 7: ["sumDouble(3, 3) -> 12", 0], 8: ["sumDouble(0, 0) -> 0", 0], 9: ["sumDouble(0, 1) -> 1", 0], 10: ["sum_double(3, 4) -> 7", 0], "passed": 0, "all": 10}
+        content = request.FILES['file'].read().decode("utf-8")
+        test_case_passed = 0
+
+        func = js2py.eval_js(content + " var exist= typeof sumDouble === 'function'")        
+        if func == True:
+            test_case_passed += 1
+            results[1][1] = 1
+            args_needed = js2py.eval_js(content + " var args=sumDouble.length")        
+            if args_needed == 2:
+                test_case_passed += 1
+                results[2][1] = 1
+                
+                func = js2py.eval_js(content)  
+                if func(1, 2) == 3:
+                    results[3][1] = 1
+                    test_case_passed += 1
+                results[3].append(f"expected output 3, outputed {func(1, 2)} instead")
+
+                if func(3, 2) == 5:
+                    results[4][1] = 1
+                    test_case_passed += 1
+                results[4].append(f"expected output 5, outputed {func(3, 2)} instead")
+                
+                if func(2, 2) == 8:
+                    results[5][1] = 1
+                    test_case_passed += 1
+                results[5].append(f"expected output 8, outputed {func(2, 2)} instead")
+
+                if func(-1, 0) == -1:
+                    results[6][1] = 1
+                    test_case_passed += 1
+                results[6].append(f"expected output 3, outputed {func(-1, 0)} instead")
+
+                if func(3, 3) == 12:
+                    results[7][1] = 1
+                    test_case_passed += 1
+                results[7].append(f"expected output 12, outputed {func(3, 3)} instead")
+
+                if func(0, 0) == 0:
+                    results[8][1] = 1
+                    test_case_passed += 1
+                results[8].append(f"expected output 0, outputed {func(0, 0)} instead")
+
+                if func(0, 1) == 1:
+                    results[9][1] = 1
+                    test_case_passed += 1
+                results[9].append(f"expected output 1, outputed {func(0, 1)} instead")
+
+                if func(3, 4) == 7:
+                    results[10][1] = 1
+                    test_case_passed += 1
+                results[10].append(f"expected output 7, outputed {func(3, 4)} instead")
+
+            else:
+                results[2].append(f"expect 2 arguments, found {args_needed}")
+        else:
+            results[1].append("Function sumDouble is undefined")
+        
+        results["passed"] = test_case_passed
+        # results["submission"] = url
+
+        a = Attempt.objects.create(user=request.user, data=results, pset=3)
+        return redirect(f"/attempt/{a.id}")
+    else:
+        return render(request, "webdev/pset3.html")
 
 @login_required(login_url='/github/authorize/')
 def view_attempt(request, attempt_id):
@@ -228,8 +300,11 @@ def gradebook(request):
         pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
     if len(list(Attempt.objects.filter(user=request.user, pset=2))) != 0:
         pset2 = Attempt.objects.filter(user=request.user, pset=2)[::-1][0]
-
+    if len(list(Attempt.objects.filter(user=request.user, pset=3))) != 0:
+        pset3 = Attempt.objects.filter(user=request.user, pset=3)[::-1][0]
+    
     return render(request, "webdev/gradebook.html", {
         "pset1": pset1,
         "pset2": pset2,
+        "pset3": pset3,
     })
