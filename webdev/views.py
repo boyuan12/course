@@ -295,6 +295,7 @@ def view_attempt(request, attempt_id):
 def gradebook(request):
     pset1 = None
     pset2 = None
+    pset3 = None
 
     if len(list(Attempt.objects.filter(user=request.user, pset=1))) != 0:
         pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
