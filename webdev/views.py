@@ -21,6 +21,10 @@ def day1(request):
     return render(request, "webdev/day1.html")
 
 @login_required(login_url='/github/authorize')
+def day2(request):
+    return render(request, "webdev/day2.html")
+
+@login_required(login_url='/github/authorize')
 def pset1(request):
     if request.method == "POST":
         results = {1: ["At least 2 different headings", 0], 2: ["At least 3 paragraphs", 0], 3: ["At least 1 ordered list", 0], 4: ["At least 1 unordered list", 0], 5: ["At least 2 images", 0], 6: ["At least 1 hyperlink", 0], 7: ["At least 1 bold", 0], 8: ["At least 1 italic", 0], 9: ["At least 1 underline", 0], "passed": 0, "all": 9}
