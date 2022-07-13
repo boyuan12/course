@@ -293,9 +293,9 @@ def view_attempt(request, attempt_id):
 
 @login_required(login_url='/github/authorize/')
 def gradebook(request):
-    pset1 = None
-    pset2 = None
-    pset3 = None
+    pset1 = {"data": {"passed": 0, "all": 9}}
+    pset2 = {"data": {"passed": 0, "all": 9}}
+    pset3 = {"data": {"passed": 0, "all": 10}}
 
     if len(list(Attempt.objects.filter(user=request.user, pset=1))) != 0:
         pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
