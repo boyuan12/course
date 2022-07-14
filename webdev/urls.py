@@ -10,6 +10,7 @@ urlpatterns = [
     path("pset1/", views.pset1),
     path("pset2/", views.pset2),
     path("pset3/", views.pset3),
+    path("pset4/", views.pset4),
 
     path("attempt/<int:attempt_id>/", views.view_attempt),
     path("gradebook", views.gradebook),

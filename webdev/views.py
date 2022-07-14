@@ -11,8 +11,36 @@ except ImportError:
     from bs4 import BeautifulSoup
 
 import cssutils
+import os
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common import by
+from selenium.common.exceptions import NoSuchElementException        
+
 
 # Create your views here.
+def load_chrome_driver():
+
+      options = Options()
+
+      options.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
+
+      options.add_argument('--headless')
+      options.add_argument('--disable-gpu')
+      options.add_argument('--no-sandbox')
+      options.add_argument('--remote-debugging-port=9222')
+
+      return webdriver.Chrome(executable_path=str(os.environ.get('CHROMEDRIVER_PATH')), chrome_options=options)
+
+def cylinder_volume():
+    import math
+    import random
+
+    r = random.randint(1, 10)
+    h = random.randint(1, 10)
+
+    return r, h, math.pi * r * r * h
+
 @login_required(login_url='/github/authorize/')
 def index(request):
     return render(request, "webdev/index.html")
@@ -284,6 +312,117 @@ def pset3(request):
     else:
         return render(request, "webdev/pset3.html")
 
+@login_required(login_url='/github/authorize')
+def pset4(request):
+    if request.method == "POST":
+        results = {1: ["Website has two input fields with id r and id h", 0], 2: ["Website has a button with id button", 0], 3: ["Website has a div with id result", 0], 4: ["Input 2 for radius and 3 for height, output 37.7", 0], 5: ["Input 3 for radius and 4 for height, output 113.1", 0], 6: ["Input 4.5 for radius and 5.5 for height, output 349.9", 0], 7: ["Random Test #1", 0], 8: ["Random Test #2 -> 0", 0], 9: ["Random Test #3", 0], "passed": 0, "all": 9}
+        test_cases_passed = 0
+
+        url = request.POST["url"]
+        driver = load_chrome_driver() 
+        driver.get(url)
+        try:
+            r = driver.find_element(by.ID, "r")
+            h = driver.find_element(by.ID, "h")
+            results[1][1] = 1
+            test_cases_passed += 1
+            try:
+                button = driver.find_element(by.ID, "button")
+                results[2][1] = 1
+                test_cases_passed += 1
+
+                try:
+                    res = driver.find_element(by.ID, "result")
+                    results[3][1] = 1
+                    test_cases_passed += 1
+
+
+                    r.clear()
+                    h.clear()
+                    r.send_keys("2")
+                    h.send_keys("3")
+                    button.click()
+                    res = driver.find_element(by.ID, "result").text
+                    if res == "37.7":
+                        results[4][1] = 1
+                        test_cases_passed += 1
+                    results[4].append(f"Expected 37.7, found {res}")
+
+                    r.clear()
+                    h.clear()
+                    r.send_keys("3")
+                    h.send_keys("4")
+                    button.click()
+                    res = driver.find_element(by.ID, "result").text
+                    if res == "113.1":
+                        results[5][1] = 1
+                        test_cases_passed += 1
+                    results[5].append(f"Expected 113.1, found {res}")
+                    
+                    r.clear()
+                    h.clear()
+                    r.send_keys("4.5")
+                    h.send_keys("5.5")
+                    button.click()
+                    res = driver.find_element(by.ID, "result").text
+                    if res == "349.9":
+                        results[6][1] = 1
+                        test_cases_passed += 1
+                    results[6].append(f"Expected 37.7, found {res}")
+                    
+                    r.clear()
+                    h.clear()
+                    r, h, v = cylinder_volume()
+                    r.send_keys(str(r))
+                    h.send_keys(str(h))
+                    button.click()
+                    res = driver.find_element(by.ID, "result").text
+                    if res == str(v):
+                        results[7][1] = 1
+                        test_cases_passed += 1
+                    results[7].append(f"Expected {v} with r {r} and h {h}, found {res}")
+
+                    r.clear()
+                    h.clear()
+                    r, h, v = cylinder_volume()
+                    r.send_keys(str(r))
+                    h.send_keys(str(h))
+                    button.click()
+                    res = driver.find_element(by.ID, "result").text
+                    if res == str(v):
+                        results[8][1] = 1
+                        test_cases_passed += 1
+                    results[8].append(f"Expected {v} with r {r} and h {h}, found {res}")
+
+                    r.clear()
+                    h.clear()
+                    r, h, v = cylinder_volume()
+                    r.send_keys(str(r))
+                    h.send_keys(str(h))
+                    button.click()
+                    res = driver.find_element(by.ID, "result").text
+                    if res == str(v):
+                        results[9][1] = 1
+                        test_cases_passed += 1
+                    results[9].append(f"Expected {v} with r {r} and h {h}, found {res}")
+
+                except NoSuchElementException:
+                    results[3].append("Can't find element with id result")
+
+            except NoSuchElementException:
+                results[2].append("Can't find element with id button")
+
+        except NoSuchElementException: 
+            results[1].append("Can't find element with id r or h")
+    
+        results["passed"] = test_cases_passed
+        results["submission"] = url
+
+        a = Attempt.objects.create(user=request.user, data=results, pset=3)
+        return redirect(f"/attempt/{a.id}")
+    else:
+        return render(request, "webdev/pset4.html")
+
 @login_required(login_url='/github/authorize/')
 def view_attempt(request, attempt_id):
     attempt = Attempt.objects.get(user=request.user, id=attempt_id)
@@ -309,3 +448,4 @@ def gradebook(request):
         "pset2": pset2,
         "pset3": pset3,
     })
+
