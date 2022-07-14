@@ -40,5 +40,15 @@
             <div class="progress-bar bg-danger" role="progressbar" style="width: {{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}%</div>
         </div>
         {% endif %}
+        <p>Problem Set #4: JS Challenge</p>
+        {% if pset3.data.passed|div:pset3.data.all >= 0.6 %}
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}%</div>
+        </div>
+        {% else %}
+        <div class="progress">
+            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset3.data.passed|div:pset3.data.all|mul:100|floatformat }}%</div>
+        </div>
+        {% endif %}
     </div>
 {% endblock %}

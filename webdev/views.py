@@ -372,39 +372,39 @@ def pset4(request):
                     
                     r.clear()
                     h.clear()
-                    r, h, v = cylinder_volume()
-                    r.send_keys(str(r))
-                    h.send_keys(str(h))
+                    radius, height, volumn = cylinder_volume()
+                    r.send_keys(str(radius))
+                    h.send_keys(str(height))
                     button.click()
                     res = driver.find_element(by.ID, "result").text
-                    if res == str(v):
+                    if res == str(volumn):
                         results[7][1] = 1
                         test_cases_passed += 1
-                    results[7].append(f"Expected {v} with r {r} and h {h}, found {res}")
+                    results[7].append(f"Expected {volumn} with r {radius} and h {height}, found {res}")
 
                     r.clear()
                     h.clear()
-                    r, h, v = cylinder_volume()
-                    r.send_keys(str(r))
-                    h.send_keys(str(h))
+                    radius, height, volumn = cylinder_volume()
+                    r.send_keys(str(radius))
+                    h.send_keys(str(height))
                     button.click()
                     res = driver.find_element(by.ID, "result").text
-                    if res == str(v):
+                    if res == str(volumn):
                         results[8][1] = 1
                         test_cases_passed += 1
-                    results[8].append(f"Expected {v} with r {r} and h {h}, found {res}")
+                    results[8].append(f"Expected {volumn} with r {radius} and h {height}, found {res}")
 
                     r.clear()
                     h.clear()
-                    r, h, v = cylinder_volume()
-                    r.send_keys(str(r))
-                    h.send_keys(str(h))
+                    radius, height, volumn = cylinder_volume()
+                    r.send_keys(str(radius))
+                    h.send_keys(str(height))
                     button.click()
                     res = driver.find_element(by.ID, "result").text
-                    if res == str(v):
+                    if res == str(volumn):
                         results[9][1] = 1
                         test_cases_passed += 1
-                    results[9].append(f"Expected {v} with r {r} and h {h}, found {res}")
+                    results[9].append(f"Expected {volumn} with r {radius} and h {height}, found {res}")
 
                 except NoSuchElementException:
                     results[3].append("Can't find element with id result")
@@ -435,6 +435,7 @@ def gradebook(request):
     pset1 = {"data": {"passed": 0, "all": 9}}
     pset2 = {"data": {"passed": 0, "all": 9}}
     pset3 = {"data": {"passed": 0, "all": 10}}
+    pset4 = {"data": {"passed": 0, "all": 9}}
 
     if len(list(Attempt.objects.filter(user=request.user, pset=1))) != 0:
         pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
@@ -442,10 +443,13 @@ def gradebook(request):
         pset2 = Attempt.objects.filter(user=request.user, pset=2)[::-1][0]
     if len(list(Attempt.objects.filter(user=request.user, pset=3))) != 0:
         pset3 = Attempt.objects.filter(user=request.user, pset=3)[::-1][0]
+    if len(list(Attempt.objects.filter(user=request.user, pset=3))) != 0:
+        pset4 = Attempt.objects.filter(user=request.user, pset=3)[::-1][0]
     
     return render(request, "webdev/gradebook.html", {
         "pset1": pset1,
         "pset2": pset2,
         "pset3": pset3,
+        "pset4": pset4,
     })
 
