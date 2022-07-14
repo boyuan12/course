@@ -39,7 +39,7 @@ def cylinder_volume():
     r = random.randint(1, 10)
     h = random.randint(1, 10)
 
-    return r, h, math.pi * r * r * h
+    return r, h, round(math.pi * r * r * h, 1)
 
 @login_required(login_url='/github/authorize/')
 def index(request):
