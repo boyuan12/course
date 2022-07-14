@@ -14,7 +14,7 @@ import cssutils
 import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common import by
+from selenium.webdriver.common.by import By as by
 from selenium.common.exceptions import NoSuchElementException        
 
 
