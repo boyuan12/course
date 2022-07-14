@@ -6,6 +6,7 @@ urlpatterns = [
     path("day1/", views.day1),
     path("day2/", views.day2),
     path("day3/", views.day3),
+    path("day4/", views.day4),
 
     path("pset1/", views.pset1),
     path("pset2/", views.pset2),
