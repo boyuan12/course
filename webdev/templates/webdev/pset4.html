@@ -9,14 +9,13 @@
         <h1>Day 4: JavaScript</h1>
         <h2>Pset 4: DOM Challenge</h2>
         <p>Problem Description: Given two int values, return their sum. Unless the two values are the same, then return double their sum.</p>
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST">
             {% csrf_token %}
             <div class="mb-3">
-              <label for="file" class="form-label">File Upload</label>
-              <input type="file" class="form-control" id="file" name="file">
+              <label for="url" class="form-label">URL to your website</label>
+              <input type="url" class="form-control" id="url" name="url">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-    <small><a href="https://codingbat.com/prob/p141905">Original Problem</a></small>
 {% endblock %}
