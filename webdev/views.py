@@ -418,7 +418,7 @@ def pset4(request):
         results["passed"] = test_cases_passed
         results["submission"] = url
 
-        a = Attempt.objects.create(user=request.user, data=results, pset=3)
+        a = Attempt.objects.create(user=request.user, data=results, pset=4)
         return redirect(f"/attempt/{a.id}")
     else:
         return render(request, "webdev/pset4.html")
