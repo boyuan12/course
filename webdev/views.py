@@ -443,8 +443,8 @@ def gradebook(request):
         pset2 = Attempt.objects.filter(user=request.user, pset=2)[::-1][0]
     if len(list(Attempt.objects.filter(user=request.user, pset=3))) != 0:
         pset3 = Attempt.objects.filter(user=request.user, pset=3)[::-1][0]
-    if len(list(Attempt.objects.filter(user=request.user, pset=3))) != 0:
-        pset4 = Attempt.objects.filter(user=request.user, pset=3)[::-1][0]
+    if len(list(Attempt.objects.filter(user=request.user, pset=4))) != 0:
+        pset4 = Attempt.objects.filter(user=request.user, pset=4)[::-1][0]
     
     return render(request, "webdev/gradebook.html", {
         "pset1": pset1,
