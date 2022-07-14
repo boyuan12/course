@@ -315,7 +315,7 @@ def pset3(request):
 @login_required(login_url='/github/authorize')
 def pset4(request):
     if request.method == "POST":
-        results = {1: ["Website has two input fields with id r and id h", 0], 2: ["Website has a button with id button", 0], 3: ["Website has a div with id result", 0], 4: ["Input 2 for radius and 3 for height, output 37.7", 0], 5: ["Input 3 for radius and 4 for height, output 113.1", 0], 6: ["Input 4.5 for radius and 5.5 for height, output 349.9", 0], 7: ["Random Test #1", 0], 8: ["Random Test #2 -> 0", 0], 9: ["Random Test #3", 0], "passed": 0, "all": 9}
+        results = {1: ["Website has two input fields with id r and id h", 0], 2: ["Website has a button with id button", 0], 3: ["Website has a div with id result", 0], 4: ["Input 2 for radius and 3 for height, output 37.7", 0], 5: ["Input 3 for radius and 4 for height, output 113.1", 0], 6: ["Input 4.5 for radius and 5.5 for height, output 349.9", 0], 7: ["Random Test #1", 0], 8: ["Random Test #2", 0], 9: ["Random Test #3", 0], "passed": 0, "all": 9}
         test_cases_passed = 0
 
         url = request.POST["url"]
