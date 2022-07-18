@@ -427,6 +427,87 @@ def pset4(request):
     else:
         return render(request, "webdev/pset4.html")
 
+@login_required(login_url="/github/authorize")
+def pset5(request):
+    if request.method == "POST":
+        results = {1: ["Website has an input text with id city", 0], 2: ["Website has a button with id button", 0], 3: ["Website has a h3 tag with id location", 0], 4: ["Website has a h3 tag with id condition", 0], 5: ["Website has an img tag with id img", 0], 6: ["Website has a h3 tag with id temp", 0], 7: ["location update correctly with input London", 0], 8: ["condition update correctly with input London", 0], 9: ["img update correctly with input London", 0], 10: ["temp update correctly with input London", 0], "passed": 0, "all": 10}
+        test_cases_passed = 0
+        url = request.POST["url"]
+
+        url = request.POST["url"]
+        driver = load_chrome_driver() 
+        driver.get(url)
+
+        try:
+            city = driver.find_element(by.ID, "city")
+            test_cases_passed += 1
+            try:
+                button = driver.find_element(by.ID, "button")
+                test_cases_passed += 1
+                try:
+                    location = driver.find_element(by.ID, "location")
+                    test_cases_passed += 1
+                    try:
+                        condition = driver.find_element(by.ID, "condition")
+                        test_cases_passed += 1
+                        try:
+                            img = driver.find_element(by.ID, "img")
+                            test_cases_passed += 1
+                            try:
+                                temp = driver.find_element(by.ID, "temp")
+                                test_cases_passed += 1
+
+                                city.send_keys("London")
+                                button.click()
+                                location = driver.find_element(by.ID, "location").text
+                                condition = driver.find_element(by.ID, "condition").text
+                                img = driver.find_element(by.ID, "img").get_attribute("src")
+                                temp = driver.find_element(by.ID, "temp").text
+
+                                _location, _condition, _img, _temp = get_weather_info("London")
+
+                                if _location == location:
+                                    test_cases_passed += 1
+                                    results[7][1] = 1
+                                results[7].append(f"expect {_location}, got {location}")
+
+                                if _condition == condition:
+                                    test_cases_passed += 1
+                                    results[8][1] = 1
+                                results[8].append(f"expect {_condition}, got {condition}")
+
+                                if _img == img:
+                                    test_cases_passed += 1
+                                    results[9][1] = 1
+                                results[9].append(f"expect {_img}, got {img}")
+
+                                if _temp == temp:
+                                    test_cases_passed += 1
+                                    results[10][1] = 1
+                                results[10].append(f"expect {_temp}, got {temp}")
+
+                            except NoSuchElementException:
+                                results[6].append("Can't find element with id temp")
+                        except NoSuchElementException:
+                            results[5].append("Can't find element with id img")
+                    except NoSuchElementException:
+                        results[4].append("Can't find element with id condition")
+                except NoSuchElementException:
+                    results[3].append("Can't find element with id location")
+            except NoSuchElementException:
+                results[2].append("Can't find element with id button")
+        except NoSuchElementException:
+            results[1].append("Can't find element with id city")
+
+        results["passed"] = test_cases_passed
+        results["submission"] = url
+
+        a = Attempt.objects.create(user=request.user, data=results, pset=5)
+        return redirect(f"/attempt/{a.id}")
+    
+    else:
+        return render(request, "webdev/pset5.html")
+
 @login_required(login_url='/github/authorize/')
 def view_attempt(request, attempt_id):
     attempt = Attempt.objects.get(user=request.user, id=attempt_id)
@@ -456,3 +537,7 @@ def gradebook(request):
         "pset3": pset3,
         "pset4": pset4,
     })
+
+def get_weather_info(city):
+    data = requests.get(f"https://api.weatherapi.com/v1/current.json?key=e6c594e2589a4528a3114629221807&q={city}").json()
+    return data["location"]["name"], data["current"]["condition"]["text"], data["current"]["condition"]["icon"], data["current"]["temp_c"]

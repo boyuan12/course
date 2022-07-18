@@ -1,0 +1,21 @@
+{% extends "webdev/base.html" %}
+
+{% block title %}
+    Day 5: Weather App
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h1>Day 5: APOD Project</h1>
+        <h2>Pset #5: Weather App</h2>
+        <p></p>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="url" class="form-label">URL to your website</label>
+              <input type="url" class="form-control" id="url" name="url">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}
