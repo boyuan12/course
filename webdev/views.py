@@ -521,6 +521,7 @@ def gradebook(request):
     pset2 = {"data": {"passed": 0, "all": 9}}
     pset3 = {"data": {"passed": 0, "all": 10}}
     pset4 = {"data": {"passed": 0, "all": 9}}
+    pset5 = {"data": {"passed": 0, "all": 10}}
 
     if len(list(Attempt.objects.filter(user=request.user, pset=1))) != 0:
         pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
@@ -530,6 +531,8 @@ def gradebook(request):
         pset3 = Attempt.objects.filter(user=request.user, pset=3)[::-1][0]
     if len(list(Attempt.objects.filter(user=request.user, pset=4))) != 0:
         pset4 = Attempt.objects.filter(user=request.user, pset=4)[::-1][0]
+    if len(list(Attempt.objects.filter(user=request.user, pset=5))) != 0:
+        pset5 = Attempt.objects.filter(user=request.user, pset=5)[::-1][0]
     
     return render(request, "webdev/gradebook.html", {
         "pset1": pset1,
