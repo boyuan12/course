@@ -474,6 +474,10 @@ def pset5(request):
                                 location = driver.find_element(by.ID, "location").text
                                 condition = driver.find_element(by.ID, "condition").text
                                 img = driver.find_element(by.ID, "img").get_attribute("src")
+                                if "https" in img:
+                                    img = img.split("https:")[1]
+                                else:
+                                    img = img.split("http:")[1]
                                 temp = driver.find_element(by.ID, "temp").text
 
                                 _location, _condition, _img, _temp = get_weather_info("London")
@@ -523,7 +527,48 @@ def pset5(request):
 @login_required(login_url="/github/authorize")
 def pset6(request):
     if request.method == "POST":
-        eval()
+        results = {1: ["string_times('Hi', 2) -> HiHi", 0], 2: ["string_times('Hi', 3) -> HiHiHi", 0], 3: ["string_times('Hi', 1) -> Hi", 0], 4: ["string_times('Hi', 0) -> ", 0], 5: ["string_times('Hi', 5) -> HiHiHiHiHi", 0], 6: ["string_times('Oh Boy!', 2) -> 'Oh Boy!Oh Boy!'", 0], 7: ["string_times('x', 4) -> xxxx"], "passed": 0, "all": 6}
+        test_cases_passed = 0
+
+        t1 = exec(request.FILES['file'].read().decode("utf-8") + "\nstring_times('Hi', 2)") 
+        t2 = exec(request.FILES['file'].read().decode("utf-8") + "\nstring_times('Hi', 3)") 
+        t3 = exec(request.FILES['file'].read().decode("utf-8") + "\nstring_times('Hi', 1)") 
+        t4 = exec(request.FILES['file'].read().decode("utf-8") + "\nstring_times('Hi', 0)") 
+        t5 = exec(request.FILES['file'].read().decode("utf-8") + "\nstring_times('Hi', 5)") 
+        t6 = exec(request.FILES['file'].read().decode("utf-8") + "\nstring_times('Oh Boy!', 2)") 
+
+        if t1 == "HiHi":
+            results[1][1] = 1
+            test_cases_passed += 1
+        results[1].append(f"Expected 'HiHi', got {t1}")
+        if t2 == "HiHiHi":
+            results[2][1] = 1
+            test_cases_passed += 1
+        results[2].append(f"Expected 'HiHiHi', got {t2}")        
+        if t3 == "Hi":
+            results[3][1] = 1
+            test_cases_passed += 1
+        results[3].append(f"Expected 'Hi', got {t3}")        
+        if t4 == "HiHi":
+            results[4][1] = 1
+            test_cases_passed += 1
+        results[4].append(f"Expected '', got {t4}")        
+        if t5 == "HiHiHiHiHi":
+            results[5][1] = 1
+            test_cases_passed += 1
+        results[5].append(f"Expected 'HiHiHiHiHi', got {t5}")        
+        if t6 == "Oh Boy!Oh Boy!":
+            results[6][1] = 1
+            test_cases_passed += 1
+        results[6].append(f"Expected 'Oh Boy!Oh Boy!', got {t6}")
+
+        results["passed"] = test_cases_passed
+
+        a = Attempt.objects.create(user=request.user, data=results, pset=6)
+        return redirect(f"/attempt/{a.id}")
+
+    else:
+        return render(request, "webdev/pset6.html")
 
 @login_required(login_url='/github/authorize/')
 def view_attempt(request, attempt_id):
@@ -539,6 +584,7 @@ def gradebook(request):
     pset3 = {"data": {"passed": 0, "all": 10}}
     pset4 = {"data": {"passed": 0, "all": 9}}
     pset5 = {"data": {"passed": 0, "all": 10}}
+    pset6 = {"data": {"passed": 0, "all": 6}}
 
     if len(list(Attempt.objects.filter(user=request.user, pset=1))) != 0:
         pset1 = Attempt.objects.filter(user=request.user, pset=1)[::-1][0]
@@ -550,13 +596,16 @@ def gradebook(request):
         pset4 = Attempt.objects.filter(user=request.user, pset=4)[::-1][0]
     if len(list(Attempt.objects.filter(user=request.user, pset=5))) != 0:
         pset5 = Attempt.objects.filter(user=request.user, pset=5)[::-1][0]
-    
+    if len(list(Attempt.objects.filter(user=request.user, pset=6))) != 0:
+        pset6 = Attempt.objects.filter(user=request.user, pset=6)[::-1][0]
+
     return render(request, "webdev/gradebook.html", {
         "pset1": pset1,
         "pset2": pset2,
         "pset3": pset3,
         "pset4": pset4,
         "pset5": pset5,
+        "pset6": pset6,
     })
 
 def get_weather_info(city):
