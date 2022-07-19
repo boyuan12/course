@@ -445,21 +445,27 @@ def pset5(request):
         try:
             city = driver.find_element(by.ID, "city")
             test_cases_passed += 1
+            results[1][1] = 1
             try:
                 button = driver.find_element(by.ID, "button")
                 test_cases_passed += 1
+                results[2][1] = 1
                 try:
                     location = driver.find_element(by.ID, "location")
                     test_cases_passed += 1
+                    results[3][1] = 1
                     try:
                         condition = driver.find_element(by.ID, "condition")
                         test_cases_passed += 1
+                        results[4][1] = 1
                         try:
                             img = driver.find_element(by.ID, "img")
                             test_cases_passed += 1
+                            results[5][1] = 1
                             try:
                                 temp = driver.find_element(by.ID, "temp")
                                 test_cases_passed += 1
+                                results[6][1] = 1
 
                                 city.send_keys("London")
                                 button.click()
@@ -512,6 +518,11 @@ def pset5(request):
     else:
         return render(request, "webdev/pset5.html")
 
+@login_required(login_url="/github/authorize")
+def pset6(request):
+    if request.method == "POST":
+        eval()
+
 @login_required(login_url='/github/authorize/')
 def view_attempt(request, attempt_id):
     attempt = Attempt.objects.get(user=request.user, id=attempt_id)
@@ -543,6 +554,7 @@ def gradebook(request):
         "pset2": pset2,
         "pset3": pset3,
         "pset4": pset4,
+        "pset5": pset5,
     })
 
 def get_weather_info(city):
