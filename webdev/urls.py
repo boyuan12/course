@@ -14,7 +14,7 @@ urlpatterns = [
     path("pset3/", views.pset3),
     path("pset4/", views.pset4),
     path("pset5/", views.pset5),
-    path("pset5/", views.pset6),
+    path("pset6/", views.pset6),
 
     path("attempt/<int:attempt_id>/", views.view_attempt),
     path("gradebook", views.gradebook),
