@@ -530,12 +530,13 @@ def pset6(request):
         results = {1: ["string_times('Hi', 2) -> HiHi", 0], 2: ["string_times('Hi', 3) -> HiHiHi", 0], 3: ["string_times('Hi', 1) -> Hi", 0], 4: ["string_times('Hi', 0) -> ", 0], 5: ["string_times('Hi', 5) -> HiHiHiHiHi", 0], 6: ["string_times('Oh Boy!', 2) -> 'Oh Boy!Oh Boy!'", 0], 7: ["string_times('x', 4) -> xxxx"], "passed": 0, "all": 6}
         test_cases_passed = 0
 
-        t1 = exec(request.FILES['file'].read().decode("utf-8") + "\nprint(string_times('Hi', 2))") 
-        t2 = exec(request.FILES['file'].read().decode("utf-8") + "\nprint(string_times('Hi', 3))") 
-        t3 = exec(request.FILES['file'].read().decode("utf-8") + "\nprint(string_times('Hi', 1))") 
-        t4 = exec(request.FILES['file'].read().decode("utf-8") + "\nprint(string_times('Hi', 0))") 
-        t5 = exec(request.FILES['file'].read().decode("utf-8") + "\nprint(string_times('Hi', 5))") 
-        t6 = exec(request.FILES['file'].read().decode("utf-8") + "\nprint(string_times('Oh Boy!', 2))") 
+        code = '''a = 1'''
+        t1 = exec(request.FILES['file'].read().decode("utf-8") + "\na = string_times('Hi', 2)", globals(),code)["a"] 
+        t2 = exec(request.FILES['file'].read().decode("utf-8") + "\na = string_times('Hi', 3)", globals(),code)["a"]  
+        t3 = exec(request.FILES['file'].read().decode("utf-8") + "\na = string_times('Hi', 1)", globals(),code)["a"] 
+        t4 = exec(request.FILES['file'].read().decode("utf-8") + "\na = string_times('Hi', 0)", globals(),code)["a"] 
+        t5 = exec(request.FILES['file'].read().decode("utf-8") + "\na = string_times('Hi', 5)", globals(),code)["a"] 
+        t6 = exec(request.FILES['file'].read().decode("utf-8") + "\na = string_times('Oh Boy!', 2)", globals(),code)["a"]
 
         if t1 == "HiHi":
             results[1][1] = 1
