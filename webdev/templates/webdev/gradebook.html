@@ -52,7 +52,17 @@
         </div>
         {% endif %}
         <p>Problem Set #5: Weather App</p>
-        {% if pset5.data.passed|div:pset4.data.all >= 0.6 %}
+        {% if pset5.data.passed|div:pset5.data.all >= 0.6 %}
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ pset6.data.passed|div:pset6.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset6.data.passed|div:pset6.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset6.data.passed|div:pset6.data.all|mul:100|floatformat }}%</div>
+        </div>
+        {% else %}
+        <div class="progress">
+            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ pset6.data.passed|div:pset6.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset6.data.passed|div:pset6.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset6.data.passed|div:pset6.data.all|mul:100|floatformat }}%</div>
+        </div>
+        {% endif %}
+        <p>Problem Set #6: PY Challenge</p>
+        {% if pset6.data.passed|div:pset6.data.all >= 0.6 %}
         <div class="progress">
             <div class="progress-bar bg-success" role="progressbar" style="width: {{ pset5.data.passed|div:pset5.data.all|mul:100|floatformat }}%;" aria-valuenow="{{ pset5.data.passed|div:pset5.data.all|mul:100|floatformat }}" aria-valuemin="0" aria-valuemax="100">{{ pset5.data.passed|div:pset5.data.all|mul:100|floatformat }}%</div>
         </div>
