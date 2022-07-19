@@ -16,7 +16,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By as by
 from selenium.common.exceptions import NoSuchElementException        
-
+from time import sleep
 
 # Create your views here.
 def load_chrome_driver():
@@ -469,6 +469,8 @@ def pset5(request):
 
                                 city.send_keys("London")
                                 button.click()
+                                sleep(5)
+                                
                                 location = driver.find_element(by.ID, "location").text
                                 condition = driver.find_element(by.ID, "condition").text
                                 img = driver.find_element(by.ID, "img").get_attribute("src")
