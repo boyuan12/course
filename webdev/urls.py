@@ -8,6 +8,7 @@ urlpatterns = [
     path("day3/", views.day3),
     path("day4/", views.day4),
     path("day5/", views.day5),
+    path("day6/", views.day6),
 
     path("pset1/", views.pset1),
     path("pset2/", views.pset2),
